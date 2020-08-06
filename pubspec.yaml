@@ -1,5 +1,5 @@
 name: sntl
-description: Use sentiment analysis n twitter topics
+description: Use sentiment analysis and twitter topics to hel pdetermine a political opinion about subjects
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
