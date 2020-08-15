@@ -14,15 +14,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'SNTL',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
       ),
       home: SearchPage(),
     );
@@ -32,31 +23,144 @@ class MyApp extends StatelessWidget {
 class SearchPage extends StatefulWidget {
   SearchPage({Key key}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   @override
   SearchPageState createState() => SearchPageState();
 }
 
 class SearchPageState extends State<SearchPage> {
+  static String consumerApiKey = "3CSWEz90VoTSuHHQjc7DQgvwQ";
+  static String consumerApiSecret = "gTwuNxcnThwDchRZ6cq3nS9VX5Hja8iAWkF6OMnXQaSWza6QdE";
+  static String accessToken = "1284682835559944193-tF0gpkzODSpQiJnjevgumsB2i0R40E";
+  static String accessTokenSecret = "pUsnhepYa6cRywfFkdNcmgxLPZTXvyXhndp26cTdUIcb9";
+
+  // Creating the twitterApi Object with the secret and public keys
+  // These keys are generated from the twitter developer page
+  // Dont share the keys with anyone
+  final _twitterOauth = new twitterApi(
+      consumerKey: consumerApiKey,
+      consumerSecret: consumerApiSecret,
+      token: accessToken,
+      tokenSecret: accessTokenSecret
+  );
+
+  // Make the request to twitter
+  Future searchTweets(String query) async {
+    Future twitterRequest = _twitterOauth.getTwitterRequest(
+    // Http Method
+    "GET",
+    // Endpoint you are trying to reach
+    "search/tweets.json",
+    // The options for the request
+    options: {
+      "q": query,
+      "count": "100",
+      "lang": "en", // Used to prevent truncating tweets
+    },
+  );
+
+
+  // Wait for the future to finish
+  var res = await twitterRequest;
+
+  // Print off the response
+  print(res.statusCode);
+  print(res.body);
+
+  // Convert the string response into something more useable
+  var tweets = json.decode(res.body);
+  print(tweets);
+  }
+
+  TextEditingController controller = new TextEditingController();
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      final text = controller.text.toLowerCase();
+      controller.value = controller.value.copyWith(
+        text: text,
+        selection:
+        TextSelection(baseOffset: text.length, extentOffset: text.length),
+        composing: TextRange.empty,
+      );
+    });
+  }
+
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(// This trailing comma makes auto-formatting nicer for build methods.
-
+    return Scaffold(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.topCenter,
+              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 100),
+              child: TextFormField(
+                controller: controller,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Courier'
+                ),
+                decoration: InputDecoration(
+                  hintText: "Enter Search Term",
+                  hintStyle: TextStyle(
+                    fontSize: 25,
+                    fontFamily: 'Courier'
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(15),
+              child: Text("Breakdown of the peoples' ideas",
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Courier'
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+                child: RaisedButton(
+                  textColor: Colors.white,
+                  padding: const EdgeInsets.all(0.0),
+                  onPressed: (){
+                    searchTweets(controller.text);
+                  },
+                  elevation: 6,
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                     gradient: LinearGradient(
+                       begin: Alignment.topCenter,
+                       end: Alignment.bottomCenter,
+                      colors: <Color>[
+                        Color.fromRGBO(245,201,143,1.0),
+                        Color.fromRGBO(199,105,238,1.0),
+                      ],
+                     ),
+                    ),
+                    padding: const EdgeInsets.all(30.0),
+                    child: const Text(">",textAlign: TextAlign.center, style: TextStyle(fontSize: 48,fontFamily: 'Courier'),),
+                  ),
+                  shape: CircleBorder(
+                      side: BorderSide(color: Colors.transparent),
+                  ),
+                ),
+              ),
+            SizedBox(height: 15,)
+          ],
+        ),
+      ),
     );
   }
 }

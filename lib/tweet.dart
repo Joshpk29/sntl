@@ -20,7 +20,6 @@ class tweet {
   }
   Widget tweetAnalysisPage(BuildContext context){
     return Scaffold(
-      
     );
   }
 }
