@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sntl/tweet.dart';
 import 'package:twitter_api/twitter_api.dart'; // used to hep do twitter search api, might not need it
 import 'package:sentiment_dart/sentiment_dart.dart'; //used for sentiment analysis
 
@@ -46,30 +47,39 @@ class SearchPageState extends State<SearchPage> {
   // Make the request to twitter
   Future searchTweets(String query) async {
     Future twitterRequest = _twitterOauth.getTwitterRequest(
-    // Http Method
-    "GET",
-    // Endpoint you are trying to reach
-    "search/tweets.json",
-    // The options for the request
-    options: {
-      "q": query,
-      "count": "100",
-      "lang": "en", // Used to prevent truncating tweets
-    },
-  );
+      // Http Method
+      "GET",
+      // Endpoint you are trying to reach
+      "search/tweets.json",
+      // The options for the request
+      options: {
+        "q": query,
+        "lang": "en",
+        "result_type":"popular",
+        "count":"13",
+        "tweet_mode": "extended",// Used to prevent truncating tweets
+      },
+    );
 
 
-  // Wait for the future to finish
-  var res = await twitterRequest;
+    // Wait for the future to finish
+    var res = await twitterRequest;
 
-  // Print off the response
-  print(res.statusCode);
-  print(res.body);
-
-  // Convert the string response into something more useable
-  var tweets = json.decode(res.body);
-  print(tweets);
+    // Print off the response
+    print(res.statusCode);
+    //debugPrint(res.body.toString());
+    var tweetList = new List();
+    // Convert the string response into something more useable
+    var tweets = json.decode(res.body);
+      for (int i = 0; i < tweets.length; i++) {
+        var idValue = tweets['statuses'][i]['full_text'];
+        tweetList.add(idValue);
+    }
+      for(int i =0; i< tweetList.length; i++){
+        print(tweetList[i]);
+      }
   }
+
 
   TextEditingController controller = new TextEditingController();
   void initState() {
