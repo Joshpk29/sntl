@@ -10,14 +10,34 @@ class tweet {
   var badWordsVal = new List();
   var goodWords = new List();
   var goodWordsVal = new List();
-  tweet(String t, int v, List bw, List bwv, List gw, List gwv){
+  tweet(String t, int v){
     Tweet = t;
     value = v;
-    badWords = bw;
-    badWordsVal = bwv;
-    goodWords = gw;
-    goodWordsVal = gwv;
   }
+  void setArray(String word, int val, int type){
+    if(type ==0)//set bad words
+      {
+        badWords.add(word);
+        badWordsVal.add(val);
+    }
+    else{ //set good words
+      goodWords.add(word);
+      goodWordsVal.add(val);
+    }
+  }
+  int sumVals(){
+    int sum =0;
+    for(int i=0; i<badWordsVal.length; i++)
+      {
+        sum += badWordsVal[i];
+      }
+    for(int i=0; i<goodWordsVal.length; i++){
+      sum += goodWordsVal[i];
+    }
+    return sum;
+  }
+  //TODO: build list component
+  //TODO: build Tweet specifics page
   Widget tweetAnalysisPage(BuildContext context){
     return Scaffold(
     );

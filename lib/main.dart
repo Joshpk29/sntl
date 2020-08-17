@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sntl/TweetCollection.dart';
 import 'package:sntl/tweet.dart';
 import 'package:twitter_api/twitter_api.dart'; // used to hep do twitter search api, might not need it
 import 'package:sentiment_dart/sentiment_dart.dart'; //used for sentiment analysis
+import 'package:flutter/foundation.dart';
+import 'tweet.dart';
 
 // Used for the decode
 import 'dart:convert';
@@ -29,6 +32,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class SearchPageState extends State<SearchPage> {
+  final sentiment = Sentiment();
   static String consumerApiKey = "3CSWEz90VoTSuHHQjc7DQgvwQ";
   static String consumerApiSecret = "gTwuNxcnThwDchRZ6cq3nS9VX5Hja8iAWkF6OMnXQaSWza6QdE";
   static String accessToken = "1284682835559944193-tF0gpkzODSpQiJnjevgumsB2i0R40E";
@@ -55,29 +59,34 @@ class SearchPageState extends State<SearchPage> {
       options: {
         "q": query,
         "lang": "en",
-        "result_type":"popular",
-        "count":"13",
+        "count":"100",
         "tweet_mode": "extended",// Used to prevent truncating tweets
       },
     );
-
-
     // Wait for the future to finish
     var res = await twitterRequest;
 
     // Print off the response
-    print(res.statusCode);
-    //debugPrint(res.body.toString());
-    var tweetList = new List();
+    //print(res.statusCode);
+    List<tweet> tweetList = new List();
     // Convert the string response into something more useable
     var tweets = json.decode(res.body);
-      for (int i = 0; i < tweets.length; i++) {
+      for (int i = 0; i < tweets['statuses'].length; i++) {
         var idValue = tweets['statuses'][i]['full_text'];
-        tweetList.add(idValue);
+        Map tweetValues = sentiment.analysis(idValue, emoji: true, languageCode: 'en');
+        tweet curTweet = new tweet(idValue, tweetValues['score']);
+        if(tweetValues['badword'] != null)
+          {
+            for(int i=0; i<tweetValues['badword'].length; i++)
+              curTweet.setArray(tweetValues['badword'][i][0], tweetValues['badword'][i][1], 0);
+          }
+        if(tweetValues['good words'] != null){
+          for(int i=0; i<tweetValues['good words'].length; i++)
+            curTweet.setArray(tweetValues['good words'][i][0], tweetValues['good words'][i][1], 1);
+        }
+        tweetList.add(curTweet);
     }
-      for(int i =0; i< tweetList.length; i++){
-        print(tweetList[i]);
-      }
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => TweetCollection(allTweets: tweetList, searchTerm: query,)));
   }
 
 
