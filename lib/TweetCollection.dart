@@ -11,6 +11,7 @@ class TweetCollection extends StatefulWidget{
 }
 
 class _TweetCollectionState extends State<TweetCollection> {
+
   @override
   void initState(){
     super.initState();
@@ -25,32 +26,55 @@ class _TweetCollectionState extends State<TweetCollection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            Container(
-              //TODO: organize top bar add in gradient background
-              height: 400,
-              child: Column(
-                children: <Widget>[
-                  Flexible(
-                      flex: 2,
-                      child: Text(widget.searchTerm,textAlign: TextAlign.center,)),
-                  Flexible(
-                      flex: 1,
-                      child: Text("$sum",textAlign: TextAlign.center,style: TextStyle(
-                        color: sum >=0 ? Colors.green : Colors.red
-                      ),)),
-                  Flexible(
-                      flex: 1,
-                      child: Text(widget.allTweets.length.toString(), textAlign: TextAlign.center,)),
+      body: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            //TODO: organize top bar add in gradient background
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: <Color>[
+                  Color.fromRGBO(245,201,143,1.0),
+                  Color.fromRGBO(199,105,238,1.0),
                 ],
               ),
             ),
-            //TODO: list all tweets
-          ],
-        ),
+            child: SafeArea(
+              child: Column(
+                children: <Widget>[
+                      Text(widget.searchTerm,textAlign: TextAlign.center, style: TextStyle(
+                        fontFamily: 'Courier',
+                        fontSize: 25
+                      ),),
+                  Text("$sum",textAlign: TextAlign.center,style: TextStyle(
+                    color: sum >=0 ? Colors.green : Colors.red,
+                    fontSize: 25,
+                    fontFamily: 'Courier'
+                  ),),
+                  Text(widget.allTweets.length.toString(), textAlign: TextAlign.center,style: TextStyle(
+                    fontFamily: 'Courier',
+                    fontSize: 15
+                  ),),
+                  SizedBox(height: 10)
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex:1,
+            child: Container(
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: widget.allTweets.length,
+                itemBuilder: (context, index){
+                  return widget.allTweets[index].listItem(context);
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
