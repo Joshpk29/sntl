@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sntl/TweetCollection.dart';
 import 'package:sntl/tweet.dart';
 import 'package:twitter_api/twitter_api.dart'; // used to hep do twitter search api, might not need it
@@ -15,9 +16,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'SNTL',
       theme: ThemeData(
+        primaryColor: Color.fromRGBO(245,201,143,1.0)
       ),
       home: SearchPage(),
     );
@@ -111,76 +115,304 @@ class SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          //jello is yummy  
-          children: <Widget>[
-            Container(
-              alignment: Alignment.topCenter,
-              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 100),
-              child: TextFormField(
-                controller: controller,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Courier'
-                ),
-                decoration: InputDecoration(
-                  hintText: "Enter Search Term",
-                  hintStyle: TextStyle(
-                    fontSize: 25,
-                    fontFamily: 'Courier'
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(15),
-              child: Text("Breakdown of the peoples' ideas",
-                style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'Courier'
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.bottomCenter,
-                child: RaisedButton(
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(0.0),
-                  onPressed: (){
-                    searchTweets(controller.text);
-                  },
-                  elevation: 6,
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                     gradient: LinearGradient(
-                       begin: Alignment.topCenter,
-                       end: Alignment.bottomCenter,
-                      colors: <Color>[
-                        Color.fromRGBO(245,201,143,1.0),
-                        Color.fromRGBO(199,105,238,1.0),
-                      ],
-                     ),
+    return Material(
+      child: Stack(
+        children: <Widget>[
+          Scaffold(
+            body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                //jello is yummy
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topCenter,
+                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 100),
+                    child: TextFormField(
+                      controller: controller,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Courier'
+                      ),
+                      decoration: InputDecoration(
+                        hintText: "Enter Search Term",
+                        hintStyle: TextStyle(
+                          fontSize: 25,
+                          fontFamily: 'Courier'
+                        ),
+                        border: InputBorder.none,
+                      ),
                     ),
-                    padding: const EdgeInsets.all(30.0),
-                    child: const Text(">",textAlign: TextAlign.center, style: TextStyle(fontSize: 48,fontFamily: 'Courier'),),
                   ),
-                  shape: CircleBorder(
-                      side: BorderSide(color: Colors.transparent),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(15),
+                    child: Text("Breakdown of the peoples' ideas",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontFamily: 'Courier'
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        padding: const EdgeInsets.all(0.0),
+                        onPressed: (){
+                          searchTweets(controller.text);
+                        },
+                        elevation: 6,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                           gradient: LinearGradient(
+                             begin: Alignment.topCenter,
+                             end: Alignment.bottomCenter,
+                            colors: <Color>[
+                              Color.fromRGBO(245,201,143,1.0),
+                              Color.fromRGBO(199,105,238,1.0),
+                            ],
+                           ),
+                          ),
+                          padding: const EdgeInsets.all(30.0),
+                          child: const Text(">",textAlign: TextAlign.center, style: TextStyle(fontSize: 48,fontFamily: 'Courier'),),
+                        ),
+                        shape: CircleBorder(
+                            side: BorderSide(color: Colors.transparent),
+                        ),
+                      ),
+                    ),
+                  SizedBox(height: 15,)
+                ],
               ),
-            SizedBox(height: 15,)
-          ],
-        ),
+            ),
+            
+          ),
+          AnimationScreen(
+            color: Color.fromRGBO(245,201,143,1.0),
+          ),
+        ]
       ),
     );
   }
 }
+//big ups to Marc at Medium everything from here on is basically him thanks my dude
+//here is the link https://www.flutterclutter.dev/flutter/tutorials/beautiful-animated-splash-screen/2020/1108/
+class StaggeredRaindropAnimation {
+  StaggeredRaindropAnimation(this.controller):
+
+        dropSize = Tween<double>(begin: 0, end: maximumDropSize).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.0, 0.2, curve: Curves.easeIn),
+          ),
+        ),
+
+        dropPosition = Tween<double>(begin: 0, end: maximumRelativeDropY).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.2, 0.5, curve: Curves.easeIn),
+          ),
+        ),
+
+        holeSize = Tween<double>(begin: 0, end: maximumHoleSize).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.5, 1.0, curve: Curves.easeIn),
+          ),
+        ),
+
+        dropVisible = Tween<bool>(begin: true, end: false).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.5, 0.5),
+          ),
+        ),
+
+        textOpacity = Tween<double>(begin: 1, end: 0).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.5, 0.7, curve: Curves.easeOut),
+          ),
+        );
+
+  final AnimationController controller;
+
+  final Animation<double> dropSize;
+  final Animation<double> dropPosition;
+  final Animation<bool> dropVisible;
+  final Animation<double> holeSize;
+  final Animation<double> textOpacity;
+
+  static final double maximumDropSize = 20;
+  static final double maximumRelativeDropY = 0.5;
+  static final double maximumHoleSize = 10;
+}
+
+class AnimationScreen extends StatefulWidget {
+  AnimationScreen({
+    @required this.color
+  });
+
+  final Color color;
+
+  @override
+  _AnimationScreenState createState() => _AnimationScreenState();
+}
+
+class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProviderStateMixin {
+  Size size = Size.zero;
+  AnimationController _controller;
+  StaggeredRaindropAnimation _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 4000),
+      vsync: this,
+    );
+    _animation = StaggeredRaindropAnimation(_controller);
+    _controller.forward();
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    setState(() {
+      size = MediaQuery.of(context).size;
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+        children: [
+          Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: CustomPaint(
+                  painter: HolePainter(
+                      color: widget.color,
+                      holeSize: _animation.holeSize.value * size.width
+                  )
+              )
+          ),
+          Positioned(
+              top: _animation.dropPosition.value * size.height,
+              left: size.width / 2 - _animation.dropSize.value / 2,
+              child: SizedBox(
+                  width: _animation.dropSize.value,
+                  height: _animation.dropSize.value,
+                  child: CustomPaint(
+                    painter: DropPainter(
+                        visible: _animation.dropVisible.value
+                    ),
+                  )
+              )
+          ),
+          Padding(
+              padding: EdgeInsets.only(bottom: 32),
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Opacity(
+                      opacity: _animation.textOpacity.value,
+                      child: Text(
+                        'SNTL',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 32
+                        ),
+                      )
+                  )
+              )
+          )
+        ]
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+}
+
+class DropPainter extends CustomPainter {
+  DropPainter({
+    this.visible = true
+  });
+
+  bool visible;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (!visible) {
+      return;
+    }
+
+    Path path = new Path();
+    path.moveTo(size.width / 2, 0);
+    path.quadraticBezierTo(0, size.height * 0.8, size.width / 2, size.height);
+    path.quadraticBezierTo(size.width, size.height * 0.8, size.width / 2, 0);
+    canvas.drawPath(path, Paint()
+      ..color = Colors.white);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+class HolePainter extends CustomPainter {
+  HolePainter({
+    @required this.color,
+    @required this.holeSize,
+  });
+
+  Color color;
+  double holeSize;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double radius = holeSize / 2;
+    Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    Rect outerCircleRect = Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: radius);
+    Rect innerCircleRect = Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: radius / 2);
+
+    Path transparentHole = Path.combine(
+      PathOperation.difference,
+      Path()..addRect(
+          rect
+      ),
+      Path()
+        ..addOval(outerCircleRect)
+        ..close(),
+    );
+
+    Path halfTransparentRing = Path.combine(
+      PathOperation.difference,
+      Path()
+        ..addOval(outerCircleRect)
+        ..close(),
+      Path()
+        ..addOval(innerCircleRect)
+        ..close(),
+    );
+
+    canvas.drawPath(transparentHole, Paint()..color = color);
+    canvas.drawPath(halfTransparentRing, Paint()..color = color.withOpacity(0.5));
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+

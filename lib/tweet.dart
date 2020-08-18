@@ -25,7 +25,6 @@ class tweet extends StatelessWidget {
       goodWordsVal.add(val);
     }
   }
-  //completely unnessary function dumb ass
   int sumVals(){
     int sum =0;
     for(int i=0; i<badWordsVal.length; i++)
@@ -58,7 +57,6 @@ class tweet extends StatelessWidget {
       ),
     );
   }
-  //TODO: build Tweet specifics page
   Widget build(BuildContext context){
     return Scaffold(
       body: SingleChildScrollView(
@@ -74,7 +72,7 @@ class tweet extends StatelessWidget {
                       child: Text("Score: $value", textAlign: TextAlign.center,style: TextStyle(
                         color: value>=0? Colors.green : Colors.red,
                         fontSize: 48,
-                        fontFamily: 'Courier'
+                        fontFamily: 'Courier',
                       ),)
                   ),
                   Text("Full Tweet: "+Tweet,
@@ -90,7 +88,11 @@ class tweet extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           SizedBox(height: 10,),
-                      Text("Good words"),
+                      Text("Good Words", style: TextStyle(
+                          fontFamily: 'Courier',
+                          fontSize: 20,
+                        fontWeight: FontWeight.w300
+                      ),),
                         Expanded(
                           flex:goodWords.length+1,
                       child: Container(
@@ -99,10 +101,17 @@ class tweet extends StatelessWidget {
                           itemCount: goodWords.length,
                           itemBuilder: (context,index){
                             return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(goodWords[index]),
-                                Text(goodWordsVal[index].toString(),style: TextStyle(
-                                  color: Colors.green
+                                Text(goodWords[index], style: TextStyle(
+                                  fontFamily: 'Courier',
+                                  fontSize: 17
+                                ),),
+                                Text(goodWordsVal[index].toString(), style: TextStyle(
+                                  color: Colors.green,
+                                  fontFamily: 'Courier',
+                                  fontSize: 17
                                 ),
                                 )
                               ],
@@ -111,7 +120,11 @@ class tweet extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 10,),
-                    Text("Bad Words"),
+                    Text("Bad Words",style: TextStyle(
+                        fontFamily: 'Courier',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w300
+                    ),),
                     Expanded(
                       flex:badWords.length+1,
                       child: Container(
@@ -120,10 +133,17 @@ class tweet extends StatelessWidget {
                           itemCount: badWords.length,
                           itemBuilder: (context,index){
                             return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(badWords[index]),
+                                Text(badWords[index],style: TextStyle(
+                                    fontFamily: 'Courier',
+                                    fontSize: 17
+                                ),),
                                 Text(badWordsVal[index].toString(),style: TextStyle(
-                                    color: Colors.red
+                                    color: Colors.red,
+                                    fontFamily: 'Courier',
+                                    fontSize: 17
                                 ),
                                 )
                               ],
