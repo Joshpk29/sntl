@@ -68,6 +68,8 @@ class tweet extends StatelessWidget {
   Widget build(BuildContext context){
     return Scaffold(
       body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: ScrollPhysics(),
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: Padding(

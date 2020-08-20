@@ -7,6 +7,7 @@ import 'package:twitter_api/twitter_api.dart'; // used to hep do twitter search 
 import 'package:sentiment_dart/sentiment_dart.dart'; //used for sentiment analysis
 import 'package:flutter/foundation.dart';
 import 'tweet.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // Used for the decode
 import 'dart:convert';
@@ -42,6 +43,11 @@ class SearchPageState extends State<SearchPage> {
   static String consumerApiSecret = "gTwuNxcnThwDchRZ6cq3nS9VX5Hja8iAWkF6OMnXQaSWza6QdE";
   static String accessToken = "1284682835559944193-tF0gpkzODSpQiJnjevgumsB2i0R40E";
   static String accessTokenSecret = "pUsnhepYa6cRywfFkdNcmgxLPZTXvyXhndp26cTdUIcb9";
+  bool isLoading = false;
+  Widget waveKit = SpinKitWave(
+    color: Color.fromRGBO(245, 201, 143, 1.0),
+    size: 50,
+  );
 
   // Creating the twitterApi Object with the secret and public keys
   // These keys are generated from the twitter developer page
@@ -55,6 +61,9 @@ class SearchPageState extends State<SearchPage> {
 
   // Make the request to twitter
   Future searchTweets(String query) async {
+    setState(() {
+      isLoading = true;
+    });
     Future twitterRequest = _twitterOauth.getTwitterRequest(
       // Http Method
       "GET",//GET request
@@ -100,6 +109,9 @@ class SearchPageState extends State<SearchPage> {
         tweetList.add(curTweet);//all tweet data collect add to list to display in next pager
     }
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => TweetCollection(allTweets: tweetList, searchTerm: query,)));//go to next page
+    setState(() {
+      isLoading = false;
+    });
   }
 
   TextEditingController controller = new TextEditingController();
@@ -168,7 +180,7 @@ class SearchPageState extends State<SearchPage> {
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                      child: RaisedButton(
+                      child: !isLoading? RaisedButton(
                         textColor: Colors.white,
                         padding: const EdgeInsets.all(0.0),
                         onPressed: (){
@@ -194,7 +206,7 @@ class SearchPageState extends State<SearchPage> {
                         shape: CircleBorder(
                             side: BorderSide(color: Colors.transparent),
                         ),
-                      ),
+                      ) : waveKit,
                     ),
                   SizedBox(height: 15,)
                 ],
