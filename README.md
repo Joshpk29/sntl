@@ -12,4 +12,4 @@ this tool assigns values to each word in the selected tweets and sums them up to
 Using this method I am attempting to crow source public opinions about certain topics and give it a numerical value.
 
 # Video
-<iframe width="560" height="315" src="Screen_Recording_20200820-110821.mp4" frameborder="0" allowfullscreen></iframe></iframe>
+<iframe width="560" height="315" src="Screen_Recording_20200820-110821.mp4" frameborder="0" allowfullscreen></iframe>
