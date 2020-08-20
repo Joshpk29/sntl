@@ -22,6 +22,7 @@ attr statusBarBackground
 attr ttcIndex
 color notification_action_color_filter
 color notification_icon_bg_color
+color primary_color
 color ripple_material_light
 color secondary_text_default_material_light
 dimen compat_button_inset_horizontal_material

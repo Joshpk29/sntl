@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sntl/TweetCollection.dart';
@@ -16,7 +17,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'SNTL',
@@ -37,6 +37,7 @@ class SearchPage extends StatefulWidget {
 
 class SearchPageState extends State<SearchPage> {
   final sentiment = Sentiment();
+  bool _isVisible = true;
   static String consumerApiKey = "3CSWEz90VoTSuHHQjc7DQgvwQ";
   static String consumerApiSecret = "gTwuNxcnThwDchRZ6cq3nS9VX5Hja8iAWkF6OMnXQaSWza6QdE";
   static String accessToken = "1284682835559944193-tF0gpkzODSpQiJnjevgumsB2i0R40E";
@@ -93,10 +94,14 @@ class SearchPageState extends State<SearchPage> {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => TweetCollection(allTweets: tweetList, searchTerm: query,)));
   }
 
-
   TextEditingController controller = new TextEditingController();
   void initState() {
     super.initState();
+    Timer(Duration(milliseconds: 4001), () {
+      setState(() {
+        _isVisible = false;
+      });
+    });
     controller.addListener(() {
       final text = controller.text.toLowerCase();
       controller.value = controller.value.copyWith(
@@ -107,7 +112,6 @@ class SearchPageState extends State<SearchPage> {
       );
     });
   }
-
   void dispose() {
     controller.dispose();
     super.dispose();
@@ -188,14 +192,16 @@ class SearchPageState extends State<SearchPage> {
                 ],
               ),
             ),
-            
           ),
-          AnimationScreen(
-            color: Color.fromRGBO(245,201,143,1.0),
-          ),
+          Visibility(
+            visible: _isVisible,
+            child: AnimationScreen(
+              color: Color.fromRGBO(245,201,143,1.0),
+            ),
+            ),
         ]
-      ),
-    );
+          ),
+      );
   }
 }
 //big ups to Marc at Medium everything from here on is basically him thanks my dude
@@ -230,7 +236,6 @@ class StaggeredRaindropAnimation {
             curve: Interval(0.5, 0.5),
           ),
         ),
-
         textOpacity = Tween<double>(begin: 1, end: 0).animate(
           CurvedAnimation(
             parent: controller,
@@ -253,7 +258,7 @@ class StaggeredRaindropAnimation {
 
 class AnimationScreen extends StatefulWidget {
   AnimationScreen({
-    @required this.color
+    @required this.color,
   });
 
   final Color color;
