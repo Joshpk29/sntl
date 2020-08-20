@@ -12,4 +12,4 @@ this tool assigns values to each word in the selected tweets and sums them up to
 Using this method I am attempting to crow source public opinions about certain topics and give it a numerical value.
 
 # Video
-[![](Screenshot_20200820-113016_Video Player.jpg)](https://www.youtube.com/watch?v=KKUMIikfib8)
+[![](AppScreenShot.jpg)](https://www.youtube.com/watch?v=KKUMIikfib8)
