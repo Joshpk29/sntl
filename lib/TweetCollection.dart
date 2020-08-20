@@ -30,7 +30,6 @@ class _TweetCollectionState extends State<TweetCollection> {
         children: <Widget>[
           Container(
             alignment: Alignment.center,
-            //TODO: organize top bar add in gradient background
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,

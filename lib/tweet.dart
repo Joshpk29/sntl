@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 class tweet extends StatelessWidget {
   String Tweet;
   int value;
+  String searchVal;
   var badWords = new List();
   var badWordsVal = new List();
   var goodWords = new List();
   var goodWordsVal = new List();
-  tweet(String t, int v){
+  tweet(String t, int v, String searchV){
     Tweet = t;
     value = v;
+    searchVal = searchV;
   }
   void setArray(String word, int val, int type){
     if(type ==0)//set bad words
@@ -25,15 +27,21 @@ class tweet extends StatelessWidget {
       goodWordsVal.add(val);
     }
   }
+  //no longer factors search word into value(i.e childish Gambino -> childish = -2 which kept hurting the value or fuck is -6 so every search would aways be down 6 more that needed)
   int sumVals(){
     int sum =0;
     for(int i=0; i<badWordsVal.length; i++)
       {
+        if(searchVal.contains(badWords[i].toString()))
+          continue;
         sum += badWordsVal[i];
       }
     for(int i=0; i<goodWordsVal.length; i++){
+      if(searchVal.contains(goodWords[i].toString()))
+        continue;
       sum += goodWordsVal[i];
     }
+    value = sum;
     return sum;
   }
   Widget listItem(BuildContext context){
